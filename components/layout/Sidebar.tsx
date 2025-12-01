@@ -4,7 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutGrid, CalendarCheck, Sparkles, Users, ShoppingBag, CreditCard,
-  ImageIcon, Package, MessageSquare, Settings, LogOut
+  ImageIcon, Package, MessageSquare, Settings, LogOut,
+  BookAIcon
 } from "lucide-react";
 import { supabaseBrowser } from "@/lib/supabase-browser";
 
@@ -15,8 +16,9 @@ const nav = [
   { label: "Customers", href: "/customers", icon: Users },
   { label: "Order", href: "/orders", icon: ShoppingBag },
   { label: "Payments", href: "/payments", icon: CreditCard },
-  { label: "Gallery", href: "/gallery", icon: ImageIcon },
+  // { label: "Gallery", href: "/gallery", icon: ImageIcon },
   { label: "Products", href: "/products", icon: Package },
+  { label: "Blogs", href: "/blogs", icon: BookAIcon },
   { label: "Contact", href: "/contact", icon: MessageSquare },
   { label: "Settings", href: "/settings", icon: Settings },
 ];
