@@ -8,6 +8,7 @@ import {
   BookAIcon
 } from "lucide-react";
 import { supabaseBrowser } from "@/lib/supabase-browser";
+// import Image from "next/image";
 
 const nav = [
   { label: "Dashboard", href: "/", icon: LayoutGrid },
@@ -37,9 +38,12 @@ export default function Sidebar() {
       <div className="bg-white/70 backdrop-blur rounded-2xl shadow-lg border border-purple-100 h-[calc(100vh-2rem)] flex flex-col">
         {/* Logo block */}
         <div className="px-4 py-5 flex items-center gap-3">
-          <div className="h-12 w-12 rounded-xl bg-[#4B2DB3] text-white grid place-items-center font-bold">
+          {/* <div className="h-12 w-12 rounded-xl bg-[#4B2DB3] text-white grid place-items-center font-bold">
             CH
-          </div>
+          </div> */}
+          {/* <Image src="/logo.png"  alt="chakra-logo" width={12} height={12} />
+           */}
+           <img src="/logo.png" alt="chakra-image" className="w-12 h-12" />
           <div>
             <p className="text-xs text-gray-500">Chakra Healing</p>
             <h2 className="text-base font-semibold">Admin Panel</h2>

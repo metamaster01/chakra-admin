@@ -79,7 +79,12 @@ export default function LoginPage() {
     <div className="w-full max-w-md">
       {/* Logo top-left feel inside card */}
       <div className="mb-6 flex items-center gap-3">
-        <div className="h-12 w-12 rounded-xl bg-[#4B2DB3] text-white grid place-items-center font-bold">
+        
+        {/* <img src="/logo.png" alt="chakra-image" className="w-12 h-12" />
+         */}
+         {/* <img src="/logo.png" alt="chakra image" className="w-12 h-12"/>  */}
+         
+          <div className="h-12 w-12 rounded-xl bg-[#4B2DB3] text-white grid place-items-center font-bold">
           CH
         </div>
         <div>
