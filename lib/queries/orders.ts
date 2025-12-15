@@ -14,34 +14,79 @@ export type OrderItemRow = {
   created_at: string;
 };
 
+// export type OrderRow = {
+//   id: number;
+//   user_id: string | null;
+//   email: string | null;
+//   phone: string | null;
+
+//   contact_email: string | null;
+//   contact_phone: string | null;
+
+//   payment_status: string | null; // e.g. paid/unpaid/draft
+//   payment_method: string | null; // e.g. razorpay/cod/upi
+//   shipping_method: string | null;
+
+//   // you said you'll add this column:
+//   shipping_status?: string | null; // in_process/completed/cancelled
+
+//   razorpay_order_id: string | null;
+//   razorpay_payment_id: string | null;
+
+//   currency: string;
+//   total_paise: number;
+
+//   status: string; // order_status enum (created/...)
+//   notes: string | null;
+
+//   address: any | null;
+//   shipping_address: any | null;
+
+//   created_at: string;
+//   updated_at: string;
+
+//   profiles: {
+//     full_name: string | null;
+//     avatar_url: string | null;
+//     phone: string | null;
+//   } | null;
+
+//   order_items: OrderItemRow[];
+// };
+
+
 export type OrderRow = {
   id: number;
   user_id: string | null;
+
+  // these can be null
   email: string | null;
   phone: string | null;
+  shipping_address: any | null;
 
+  // these are actually filled
   contact_email: string | null;
   contact_phone: string | null;
 
-  payment_status: string | null; // e.g. paid/unpaid/draft
-  payment_method: string | null; // e.g. razorpay/cod/upi
+  // IMPORTANT: this is what your row shows ("paid")
+  status: string; // paid | draft | ...
+
+  payment_status: string | null; // also "paid" in your row
+  payment_method: string | null; // cod/upi/card etc.
+
   shipping_method: string | null;
+  shipping_status?: string | null;
 
-  // you said you'll add this column:
-  shipping_status?: string | null; // in_process/completed/cancelled
-
-  razorpay_order_id: string | null;
-  razorpay_payment_id: string | null;
+  // address comes as JSON string in your row
+  address: any | string | null;
 
   currency: string;
   total_paise: number;
 
-  status: string; // order_status enum (created/...)
+  razorpay_order_id: string | null;
+  razorpay_payment_id: string | null;
+
   notes: string | null;
-
-  address: any | null;
-  shipping_address: any | null;
-
   created_at: string;
   updated_at: string;
 
@@ -53,6 +98,7 @@ export type OrderRow = {
 
   order_items: OrderItemRow[];
 };
+
 
 export async function getOrders(): Promise<OrderRow[]> {
   const supabase = await supabaseServer();

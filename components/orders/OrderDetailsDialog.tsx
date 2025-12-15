@@ -18,8 +18,11 @@ function formatMoney(paise: number, currency: string) {
 }
 
 function isPaid(order: OrderRow) {
-  return (order.payment_status ?? "").toLowerCase() === "paid";
+  const ps = (order.payment_status ?? "").toLowerCase();
+  const st = (order.status ?? "").toLowerCase(); // your data uses this
+  return ps === "paid" || st === "paid";
 }
+
 
 function normalizeShippingStatus(v: string | null | undefined) {
   const s = (v ?? "").toLowerCase();
@@ -330,3 +333,6 @@ export default function OrderDetailsDialog({
     </div>
   );
 }
+
+
+
