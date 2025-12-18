@@ -123,26 +123,87 @@ export default function OrderDetailsDialog({
     return coerceObject(order.shipping_address) ?? coerceObject(order.address);
   }, [order]);
 
+const cancelReqs = useMemo(() => {
+  if (!order) return [];
+  const v = (order as any)?.order_cancellation_requests;
+  return Array.isArray(v) ? v : [];
+}, [order]);
+
+const latestCancel = useMemo(() => {
+  if (!cancelReqs.length) return null;
+  return [...cancelReqs].sort(
+    (a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  )[0];
+}, [cancelReqs]);
+
+const isCancelled = order ? normalizeShippingStatus(order.shipping_status) === "cancelled" : false;
+
+
+
+  // async function updateShipping(next: "in_process" | "completed" | "cancelled") {
+  //   if (!order) return;
+  //   setErr(null);
+  //   setSaving(true);
+
+  //   try {
+  //     const supabase = await (supabaseBrowser() as any);
+  //     const { error } = await supabase
+  //       .from("orders")
+  //       .update({ shipping_status: next, updated_at: new Date().toISOString() })
+  //       .eq("id", order.id);
+
+  //     if (error) throw error;
+  //     onShippingStatusUpdated?.(order.id, next);
+  //   } catch (e: any) {
+  //     setErr(e?.message ?? "Failed to update shipping status.");
+  //   } finally {
+  //     setSaving(false);
+  //   }
+  // }
+
   async function updateShipping(next: "in_process" | "completed" | "cancelled") {
-    if (!order) return;
-    setErr(null);
-    setSaving(true);
+  if (!order) return;
+  setErr(null);
+  setSaving(true);
 
-    try {
-      const supabase = await (supabaseBrowser() as any);
-      const { error } = await supabase
-        .from("orders")
-        .update({ shipping_status: next, updated_at: new Date().toISOString() })
-        .eq("id", order.id);
+  try {
+    const supabase = await (supabaseBrowser() as any);
 
-      if (error) throw error;
-      onShippingStatusUpdated?.(order.id, next);
-    } catch (e: any) {
-      setErr(e?.message ?? "Failed to update shipping status.");
-    } finally {
-      setSaving(false);
+    const { error: upErr } = await supabase
+      .from("orders")
+      .update({ shipping_status: next, updated_at: new Date().toISOString() })
+      .eq("id", order.id);
+
+    if (upErr) throw upErr;
+
+    if (next === "cancelled") {
+      const reason = "Cancelled by Admin";
+
+      // best effort: don't spam duplicates
+      const existing = Array.isArray((order as any)?.order_cancellation_requests)
+        ? (order as any).order_cancellation_requests
+        : [];
+      const already = existing.some(
+        (r: any) => String(r?.reason || "").toLowerCase() === reason.toLowerCase()
+      );
+
+      if (!already) {
+        const { error: insErr } = await supabase
+          .from("order_cancellation_requests")
+          .insert({ order_id: order.id, user_id: null, reason, status: "approved" });
+
+        if (insErr) throw insErr;
+      }
     }
+
+    onShippingStatusUpdated?.(order.id, next);
+  } catch (e: any) {
+    setErr(e?.message ?? "Failed to update shipping status.");
+  } finally {
+    setSaving(false);
   }
+}
+
 
   if (!open || !order) return null;
 
@@ -235,7 +296,13 @@ export default function OrderDetailsDialog({
                 )}
               </div>
             </div>
+
+
+
+            
           </div>
+
+          
 
           <div className="mt-5 grid gap-4 md:grid-cols-2">
             <div className="rounded-2xl border border-gray-100 p-4">
@@ -262,6 +329,28 @@ export default function OrderDetailsDialog({
               </div>
             </div>
           </div>
+
+
+          {isCancelled ? (
+  <div className="mt-5 rounded-2xl border border-red-100 bg-red-50 p-4">
+    <h4 className="text-sm font-semibold text-red-900">Cancellation</h4>
+    {latestCancel ? (
+      <div className="mt-2 text-sm text-red-800 space-y-1">
+        <div>
+          <span className="font-medium">Reason:</span> {latestCancel.reason}
+        </div>
+        <div className="text-xs text-red-900/70">
+          Logged: {new Date(latestCancel.created_at).toLocaleString("en-IN")}
+        </div>
+      </div>
+    ) : (
+      <div className="mt-2 text-sm text-red-800">
+        Cancelled, but no reason found.
+      </div>
+    )}
+  </div>
+) : null}
+
 
           <div className="mt-5 rounded-2xl border border-gray-100">
             <div className="border-b border-gray-100 px-4 py-3">

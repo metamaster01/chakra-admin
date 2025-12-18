@@ -104,47 +104,49 @@ export async function getOrders(): Promise<OrderRow[]> {
   const supabase = await supabaseServer();
 
   const { data, error } = await supabase
-    .from("orders")
-    .select(
-      `
-      id,
-      user_id,
-      email,
-      phone,
-      contact_email,
-      contact_phone,
-      payment_status,
-      payment_method,
-      shipping_method,
-      shipping_status,
-      razorpay_order_id,
-      razorpay_payment_id,
-      total_paise,
-      currency,
-      status,
-      notes,
-      address,
-      shipping_address,
-      created_at,
-      updated_at,
-      profiles(full_name, avatar_url, phone),
-      order_items(
-        id,
-        product_id,
-        variant_id,
-        name_snapshot,
-        unit_price_paise,
-        quantity,
-        color_snapshot,
-        size_snapshot,
-        image_snapshot,
-        line_total_paise,
-        created_at
-      )
+  .from("orders")
+  .select(
     `
-    )
-    .order("created_at", { ascending: false })
-    .limit(300);
+    id,
+    user_id,
+    email,
+    phone,
+    contact_email,
+    contact_phone,
+    payment_status,
+    payment_method,
+    shipping_method,
+    shipping_status,
+    razorpay_order_id,
+    razorpay_payment_id,
+    total_paise,
+    currency,
+    status,
+    notes,
+    address,
+    shipping_address,
+    created_at,
+    updated_at,
+    profiles(full_name, avatar_url, phone),
+    order_items(
+      id,
+      product_id,
+      variant_id,
+      name_snapshot,
+      unit_price_paise,
+      quantity,
+      color_snapshot,
+      size_snapshot,
+      image_snapshot,
+      line_total_paise,
+      created_at
+    ),
+    order_cancellation_requests(reason, created_at)
+  `
+  )
+  .order("created_at", { ascending: false })
+  .limit(300);
+
 
   if (error) throw error;
   return (data ?? []) as unknown as OrderRow[];
