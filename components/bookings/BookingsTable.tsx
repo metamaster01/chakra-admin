@@ -36,6 +36,7 @@ export default function BookingsTable({ initialData }: { initialData: any[] }) {
               <th className="text-left py-2">Service</th>
               <th className="text-left py-2">Date & Time</th>
               <th className="text-left py-2">Payment</th>
+              <th className="text-left py-2">Amount</th>
               <th className="text-left py-2">Status</th>
               <th className="text-left py-2"></th>
             </tr>
@@ -62,6 +63,9 @@ export default function BookingsTable({ initialData }: { initialData: any[] }) {
                 </td>
                 <td className="py-3">
                   <BookingStatusBadge type="payment" value={b.payment_status} />
+                </td>
+                <td className="py-3">
+                  {b.service_price_paise ? `${b.service_price_paise / 100} INR` : "—"}
                 </td>
                 <td className="py-3">
                   <BookingStatusBadge type="status" value={b.status} />

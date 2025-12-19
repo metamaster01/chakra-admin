@@ -49,6 +49,7 @@ export default function ServicesTable({
                 <th className="text-left py-2">Service ID</th>
                 <th className="text-left py-2">Title</th>
                 <th className="text-left py-2">Slug</th>
+                <th className="text-left py-2">Price</th>
                 <th className="text-left py-2">Short Desc</th>
                 <th className="text-left py-2">Status</th>
                 <th className="text-left py-2"></th>
@@ -64,7 +65,8 @@ export default function ServicesTable({
                   )}`}</td>
                   <td className="py-3">{s.title}</td>
                   <td className="py-3">{s.slug}</td>
-                  <td className="py-3 truncate max-w-[280px]">
+                  <td className="py-3">{s.price_paise}</td>
+                  <td className="py-3 truncate max-w-[220px]">
                     {s.short_desc || "—"}
                   </td>
                   <td className="py-3">

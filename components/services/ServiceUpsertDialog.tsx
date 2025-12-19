@@ -23,6 +23,7 @@ export default function ServiceUpsertDialog({
     short_desc: initial?.short_desc ?? "",
     long_desc: initial?.long_desc ?? "",
     is_active: initial?.is_active ?? true,
+    price_paise: initial?.price_paise ?? 0,
     image_path: initial?.image_path ?? null, // stored in services table
   });
 
@@ -183,6 +184,11 @@ export default function ServiceUpsertDialog({
               label="Slug (unique)"
               value={form.slug}
               onChange={(v) => updateField("slug", v)}
+            />
+            <Input
+              label="Price (in paise)"
+              value={form.price_paise}
+              onChange={(v) => updateField("price_paise", v)}
             />
 
             <div className="md:col-span-2">
