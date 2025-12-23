@@ -1,9 +1,12 @@
 import AdminShell from "@/components/layout/AdminShell";
 import ProductsTable from "@/components/products/ProductsTable";
 import { getProductsAdmin } from "@/lib/queries/products";
+import ReviewsTable from "@/components/products/ReviewTable";
+import { getReviewsAdmin } from "@/lib/queries/reviews";
 
 export default async function ProductsPage() {
   const data = await getProductsAdmin();
+  const data2 = await getReviewsAdmin();
 
   return (
     <AdminShell>
@@ -20,6 +23,17 @@ export default async function ProductsPage() {
       </div>
 
       <ProductsTable initialData={data} />
+
+      <div className="mt-6">
+        <div className="mb-6">
+        <h2 className="text-2xl font-bold text-gray-900">Reviews</h2>
+        <p className="text-sm text-gray-500 mt-1">
+          Moderate product reviews submitted by customers.
+        </p>
+      </div>
+
+      <ReviewsTable initialData={data2} />
+      </div>
     </AdminShell>
   );
 }

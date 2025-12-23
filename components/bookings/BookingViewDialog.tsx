@@ -36,7 +36,21 @@ export default function BookingViewDialog({
   if (!row) return null;
 
   const addr = safeObj(row.address);
-  const serviceTitle = row.services?.title || row.other_therapy || "—";
+  // const serviceTitle = row.services?.title || row.other_therapy || "—";
+  const items = Array.isArray(row.service_booking_items)
+    ? row.service_booking_items
+    : [];
+  const serviceTitle = items.length
+    ? items
+        .map(
+          (i: any) =>
+            `${i.title_snapshot || i.services?.title || "Service"} × ${
+              i.quantity ?? 1
+            }`
+        )
+        .join(", ")
+    : row.other_therapy || "—";
+
   const isCancelled = String(row.status || "").toLowerCase() === "cancelled";
 
   const latestCancel =
@@ -299,6 +313,42 @@ export default function BookingViewDialog({
               )}
             </div>
           ) : null}
+
+
+          {/* Service Items Area  */}
+
+
+          <div className="rounded-2xl border border-gray-100 p-4">
+  <h4 className="text-sm font-semibold text-gray-900">Services</h4>
+
+  {items.length ? (
+    <div className="mt-3 space-y-2 text-sm">
+      {items.map((it: any) => {
+        const title = it.title_snapshot || it.services?.title || "Service";
+        const qty = Number(it.quantity || 1);
+        const unit = Number(it.unit_price_paise || 0);
+        return (
+          <div key={it.id} className="flex items-center justify-between">
+            <div className="text-gray-800">
+              {title} <span className="text-gray-500">× {qty}</span>
+            </div>
+            <div className="font-medium text-gray-900">
+              {inr(unit * qty)}
+            </div>
+          </div>
+        );
+      })}
+
+      <div className="border-t pt-2 mt-2 flex items-center justify-between font-semibold">
+        <div>Total</div>
+        <div>{inr(Number(row.service_price_paise || 0))}</div>
+      </div>
+    </div>
+  ) : (
+    <div className="mt-2 text-sm text-gray-500">No service items found.</div>
+  )}
+</div>
+
 
           <div className="rounded-2xl border border-gray-100 p-4">
             <h4 className="text-sm font-semibold text-gray-900">Address</h4>
