@@ -15,10 +15,16 @@ export default async function DashboardPage() {
         <h2 className="text-2xl font-bold text-gray-900">Dashboard</h2>
         <div className="flex gap-3">
           <button className="px-4 py-2 rounded-xl bg-gray-700 text-white text-sm shadow">
+            <a href="/bookings">
+            
             View Bookings
+            </a>
           </button>
           <button className="px-4 py-2 rounded-xl bg-[#4B2DB3] text-white text-sm shadow">
-            Create New Service +
+            <a href="/orders">
+            
+            View Orders
+            </a>
           </button>
         </div>
       </div>
@@ -30,7 +36,7 @@ export default async function DashboardPage() {
         <StatCard
           title="Total Revenue"
           value={`₹${(data.totalRevenuePaise / 100).toLocaleString("en-IN")}`}
-          sub="+ this week"
+          sub="Updated live"
         />
         <StatCard title="New Customers" value={data.newCustomers} sub="+ this week" />
       </div>
